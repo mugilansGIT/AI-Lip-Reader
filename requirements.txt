@@ -1,0 +1,44 @@
+# Core ML
+torch==2.3.0
+torchvision==0.18.0
+
+# Computer vision
+opencv-python==4.9.0.80
+numpy==1.26.4
+
+# Face / landmark detection (choose one)
+dlib==19.24.4
+# mediapipe==0.10.14  # alternative to dlib
+
+# Text / metrics
+editdistance==0.8.1
+
+# Config
+PyYAML==6.0.1
+
+# Web UI
+streamlit==1.35.0
+Flask==3.0.3          # only needed if using Flask instead of Streamlit
+Jinja2==3.1.4
+
+# Notebook
+jupyter==1.0.0
+matplotlib==3.9.0
+
+torch
+torchvision
+torchaudio
+opencv-python
+dlib                    # for face landmark detection
+mediapipe               # alternative to dlib, easier to set up
+face-alignment          # 68-point facial landmarks
+numpy
+scipy
+matplotlib
+tqdm
+editdistance            # for WER/CER metric
+streamlit               # for web UI
+imageio
+imageio-ffmpeg
+srt                     # for writing subtitle files
+pyyaml

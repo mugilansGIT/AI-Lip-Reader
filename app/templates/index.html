@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lip Reader</title>
+  <style>
+    body { font-family: sans-serif; max-width: 720px; margin: 40px auto; padding: 0 16px; }
+    h1   { color: #333; }
+    form { margin-top: 24px; }
+    input[type="file"] { margin-bottom: 12px; display: block; }
+    button { padding: 8px 20px; background: #4f46e5; color: #fff; border: none;
+             border-radius: 6px; cursor: pointer; font-size: 1rem; }
+    button:hover { background: #4338ca; }
+    #result { margin-top: 24px; padding: 16px; background: #f3f4f6;
+              border-radius: 8px; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h1>👄 Lip Reader</h1>
+  <p>Upload a video to generate an automatic transcript.</p>
+
+  <form action="/predict" method="post" enctype="multipart/form-data">
+    <input type="file" name="video" accept="video/*" required />
+    <button type="submit">Transcribe</button>
+  </form>
+
+  {% if transcript %}
+  <div id="result">
+    <strong>Transcript:</strong><br />
+    {{ transcript }}
+  </div>
+  {% endif %}
+</body>
+</html>

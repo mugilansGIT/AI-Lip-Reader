@@ -1,0 +1,30 @@
+# config.yaml — Central configuration for the lip reading project
+
+paths:
+  raw_videos:   data/raw_videos
+  processed:    data/processed
+  alignments:   data/alignments
+  face_detector_model: models/face_detector/shape_predictor_68_face_landmarks.dat
+  best_model:   models/lip_reader/best_model.pt
+
+data:
+  lip_size: [96, 96]       # (width, height) of cropped lip patch
+  max_frames: 75           # maximum sequence length (frames)
+  train_split: 0.8
+  val_split:   0.1
+  test_split:  0.1
+
+model:
+  num_classes: 28          # 26 letters + space + CTC blank
+  hidden_size: 256
+  num_layers:  2
+
+train:
+  epochs:      100
+  batch_size:  8
+  lr:          1.0e-4
+  grad_clip:   5.0
+  seed:        42
+
+inference:
+  beam_width:  1           # 1 = greedy; >1 = beam search
