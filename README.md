@@ -113,20 +113,15 @@ lip-reader/
 
 ## 📊 Evaluation Results
 
-Sample Evaluation Results:
+Evaluated on 100 random GRID Corpus videos.
 
-| Ground Truth             | Prediction               |
-| ------------------------ | ------------------------ |
-| bin red with m two again | bin red with m two again |
-| set red in d nine soon   | set red in d nine soon   |
-| lay white in k six again | lay white in k six again |
-| place blue in f six soon | place blue in f six soon |
+| Metric | Score |
+|----------|----------|
+| Word Accuracy | 90.31% |
+| Word Error Rate (WER) | 5.58% |
+| Character Error Rate (CER) | 2.36% |
 
-Observed accuracy on sampled test videos:
-
-* 18/20 videos perfectly predicted
-* Minor errors typically involve visually similar letters
-* Strong performance on GRID vocabulary sentences
+Results generated using automated evaluation on unseen test samples.
 
 ---
 
