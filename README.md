@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/banner.jpg" width="900"/>
+  <img src="app/assets/banner.jpg" width="900"/>
 </p>
 
 <h1 align="center">🎥 AI Lip Reader</h1>
