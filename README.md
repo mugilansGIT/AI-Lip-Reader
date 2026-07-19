@@ -1,3 +1,13 @@
+<p align="center">
+  <img src="assets/banner.jpg" width="900"/>
+</p>
+
+<h1 align="center">🎥 AI Lip Reader</h1>
+
+<p align="center">
+  Real-Time Visual Speech Recognition using Deep Learning
+</p>
+
 # 🎯 AI Lip Reader
 
 AI-powered lip reading system that converts silent videos into text transcripts and downloadable subtitle files (.srt).
