@@ -1,43 +1,10 @@
 import tempfile
 import numpy as np
-import torch
 
-from src.model.architecture import LipNet
-from src.inference.decoder import greedy_decode
 from src.preprocessing.frame_pipeline import process_video
+from src.inference.predict_core import predict_array
 
 
-# =========================
-# DEVICE
-# =========================
-DEVICE = torch.device(
-    "cuda" if torch.cuda.is_available()
-    else "cpu"
-)
-
-print("Using device:", DEVICE)
-
-
-# =========================
-# LOAD MODEL
-# =========================
-model = LipNet().to(DEVICE)
-
-model.load_state_dict(
-    torch.load(
-        "models/lip_reader/best_model.pth",
-        map_location=DEVICE
-    )
-)
-
-model.eval()
-
-print("Model loaded.")
-
-
-# =========================
-# SLIDING WINDOW PREDICTION
-# =========================
 def sliding_predict(
     video_path,
     window_size=75,
@@ -63,7 +30,7 @@ def sliding_predict(
     print(f"Saved processed file: {npy_path}")
 
     # -------------------------
-    # load processed lips
+    # load processed data
     # -------------------------
     data = np.load(npy_path)
 
@@ -81,12 +48,11 @@ def sliding_predict(
         window_size = total_frames
 
         print(
-            f"Adjusted window size "
-            f"to {window_size}"
+            f"Adjusted window size to {window_size}"
         )
 
     # -------------------------
-    # sliding windows
+    # sliding window prediction
     # -------------------------
     for start in range(
         0,
@@ -98,38 +64,11 @@ def sliding_predict(
 
         clip = data[start:end]
 
-        # Skip empty clips
-        if clip.shape[0] == 0:
+        if len(clip) == 0:
             continue
 
-        # -------------------------
-        # tensor conversion
-        # -------------------------
-        x = torch.tensor(
-            clip,
-            dtype=torch.float32
-        )
+        prediction = predict_array(clip)
 
-        # shape:
-        # (1, T, 1, H, W)
-        x = x.unsqueeze(0).unsqueeze(2)
-
-        x = x.to(DEVICE)
-
-        # -------------------------
-        # model inference
-        # -------------------------
-        with torch.no_grad():
-
-            output = model(x)
-
-            output = output[0]
-
-            prediction = greedy_decode(output)
-
-        # -------------------------
-        # timestamps
-        # -------------------------
         start_time = start / fps
         end_time = end / fps
 

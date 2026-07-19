@@ -1,5 +1,6 @@
 import sys
 import os
+import tempfile
 
 sys.path.append(
     os.path.abspath(
@@ -11,23 +12,24 @@ sys.path.append(
 )
 
 import streamlit as st
-import tempfile
 
 from src.inference.predict_video import predict_video
 from src.inference.subtitle_writer import write_srt
 
 # =====================================
-# UI
+# PAGE CONFIG
 # =====================================
 
 st.set_page_config(
     page_title="AI Lip Reader",
-    page_icon="🎥"
+    page_icon="🎥",
+    layout="centered"
 )
 
 st.title("🎥 AI Lip Reader")
+
 st.write(
-    "Upload a silent video and generate subtitles automatically."
+    "Upload a silent video and automatically generate subtitles."
 )
 
 # =====================================
@@ -41,16 +43,21 @@ uploaded_file = st.file_uploader(
 
 if uploaded_file is not None:
 
-    st.subheader("Video Preview")
+    st.subheader("📹 Video Preview")
 
-    st.video(uploaded_file)
+    # Read the uploaded file ONCE
+    video_bytes = uploaded_file.getvalue()
 
+    # Display video preview
+    st.video(video_bytes)
+
+    # Save temporary file for prediction
     temp_video = tempfile.NamedTemporaryFile(
         delete=False,
         suffix=".mp4"
     )
 
-    temp_video.write(uploaded_file.read())
+    temp_video.write(video_bytes)
     temp_video.close()
 
     if st.button("Generate Subtitles"):
@@ -59,9 +66,9 @@ if uploaded_file is not None:
 
             try:
 
-                # =========================
-                # PREDICTION
-                # =========================
+                # =====================================
+                # PREDICT
+                # =====================================
 
                 prediction = predict_video(
                     temp_video.name
@@ -69,13 +76,13 @@ if uploaded_file is not None:
 
                 st.success("Prediction completed!")
 
-                st.subheader("Predicted Text")
+                st.subheader("📝 Predicted Text")
 
                 st.write(prediction)
 
-                # =========================
-                # CREATE SUBTITLE FORMAT
-                # =========================
+                # =====================================
+                # CREATE SUBTITLE
+                # =====================================
 
                 subtitles = [
                     {
@@ -85,10 +92,6 @@ if uploaded_file is not None:
                     }
                 ]
 
-                # =========================
-                # SAVE SRT
-                # =========================
-
                 srt_path = "prediction.srt"
 
                 write_srt(
@@ -96,18 +99,16 @@ if uploaded_file is not None:
                     srt_path
                 )
 
-                st.success(
-                    "Subtitle file generated successfully!"
-                )
+                st.success("Subtitle file generated successfully!")
 
-                # =========================
+                # =====================================
                 # DOWNLOAD BUTTON
-                # =========================
+                # =====================================
 
                 with open(srt_path, "rb") as f:
 
                     st.download_button(
-                        label="📥 Download SRT",
+                        label="📥 Download Subtitle (.srt)",
                         data=f,
                         file_name="prediction.srt",
                         mime="text/plain"
@@ -116,5 +117,12 @@ if uploaded_file is not None:
             except Exception as e:
 
                 st.error(
-                    f"Error occurred: {str(e)}"
+                    f"Error: {str(e)}"
                 )
+
+# =====================================
+# FOOTER
+# =====================================
+
+st.markdown("---")
+st.caption("AI Lip Reader • Built with PyTorch + MediaPipe + Streamlit")
